@@ -1,4 +1,4 @@
-# Ironhorse Form Practice
+# Ironhorse Taekwondo Flashcards
 
 Taekwondo flashcards for Ironhorse Martial Arts: form meanings, movement counts, and belt meanings.
 A static web app with no build step. It installs to a phone's home screen and works offline.
@@ -7,21 +7,19 @@ A static web app with no build step. It installs to a phone's home screen and wo
 
 On a phone, open the link and add it to your home screen (iPhone: Share → Add to Home Screen; Android: the Install app button).
 
-## Deploy to GitHub Pages
+## Deployment
 
-1. Create a new repository on GitHub (this one is `ironhorse-taekwondo-flashcards`).
-2. Upload every file in this folder to the repository root, keeping the `.github` and `icons` folders.
-   Or from a terminal:
-   ```
-   git init -b main
-   git add .
-   git commit -m "Ironhorse flashcards"
-   git remote add origin https://github.com/YOUR-USERNAME/ironhorse-taekwondo-flashcards.git
-   git push -u origin main
-   ```
-3. In the repository, open **Settings → Pages** and set **Source** to **GitHub Actions**.
-4. The included workflow deploys on every push to `main`. The site appears at
-   `https://YOUR-USERNAME.github.io/ironhorse-taekwondo-flashcards/`.
+This repo, [rstolle/ironhorse-taekwondo-flashcards](https://github.com/rstolle/ironhorse-taekwondo-flashcards),
+deploys to GitHub Pages with GitHub Actions (**Settings → Pages → Source: GitHub Actions**).
+The workflow in `.github/workflows/pages.yml` publishes every push to `main` to
+https://rstolle.github.io/ironhorse-taekwondo-flashcards/ within about a minute.
+
+To work on it locally:
+```
+git clone https://github.com/rstolle/ironhorse-taekwondo-flashcards.git
+cd ironhorse-taekwondo-flashcards
+python3 -m http.server 8000   # then open http://localhost:8000/
+```
 
 ## Updating the cards
 
