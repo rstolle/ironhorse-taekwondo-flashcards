@@ -1,6 +1,6 @@
 # Ironhorse Taekwondo Flashcards
 
-Taekwondo flashcards for Ironhorse Martial Arts: form meanings, movement counts, and belt meanings.
+Taekwondo flashcards for [Ironhorse Martial Arts](https://www.ironhorsemartialarts.com/): form meanings, movement counts, and belt meanings.
 A static web app with no build step. It installs to a phone's home screen and works offline.
 
 **Live app: https://rstolle.github.io/ironhorse-taekwondo-flashcards/**
