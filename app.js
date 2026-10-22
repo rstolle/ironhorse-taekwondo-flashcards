@@ -2,18 +2,24 @@
 
 const $ = id => document.getElementById(id);
 const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+const nb = s => s.replace(/-/g, '\u2011'); // non-breaking hyphen
 
 // IDs come from names, so adding or reordering cards never scrambles saved progress.
 const cards = [
   ...forms.flatMap(([name, n, meaning]) => [
-    { id: 'meaning:' + slug(name), type: 'meaning', name, question: 'What is the meaning of ' + name + '?', answer: meaning },
-    { id: 'movements:' + slug(name), type: 'movements', name, question: 'How many movements are in ' + name + '?', answer: String(n) }
+    { id: 'meaning:' + slug(name), type: 'meaning', name, question: 'What is the meaning of ' + nb(name) + '?', answer: meaning },
+    { id: 'movements:' + slug(name), type: 'movements', name, question: 'How many movements are in ' + nb(name) + '?', answer: String(n) }
   ]),
   ...belts.map(([name, answer]) => ({ id: 'belt:' + slug(name), type: 'belts', name: name + ' Belt', question: 'What does the ' + name + ' Belt mean?', answer }))
 ];
 const byId = new Map(cards.map(c => [c.id, c]));
 const TYPE_LABELS = { meaning: 'Form meaning', movements: 'Movement count', belts: 'Belt meaning' };
-const CATEGORIES = { all: 'All cards', meaning: 'Form meanings', movements: 'Movement counts', belts: 'Belt meanings' };
+// Touch devices get tap wording; mouse/keyboard devices get the Space shortcut.
+const touch = matchMedia('(hover: none), (pointer: coarse)').matches;
+const HINT_FRONT = touch ? 'Tap the card to reveal' : 'Click or press Space to reveal';
+const HINT_BACK = touch ? 'Tap to see the question again' : 'Click or press Space to see the question again';
+const LONG_ANSWER = 160; // characters; longer answers get a smaller font on phones
+const CATEGORIES = { all: 'All cards', meaning: 'Meanings', movements: 'Movements', belts: 'Belts' };
 
 // Category menu with live counts.
 $('category').innerHTML = Object.entries(CATEGORIES).map(([value, label]) => {
@@ -55,7 +61,8 @@ function render() {
   $('label').textContent = TYPE_LABELS[c.type];
   $('content').className = 'question';
   $('content').textContent = c.question;
-  $('hint').textContent = 'Tap to reveal · Space on keyboard';
+  $('hint').textContent = HINT_FRONT;
+  $('announce').textContent = '';
   $('card').setAttribute('aria-label', c.question + ' Reveal answer');
   $('again').disabled = $('known').disabled = true;
   $('remaining').textContent = (deck.length - index) + ' cards remaining';
@@ -83,8 +90,10 @@ function flip() {
   const c = deck[index];
   if (flipped && c.type === 'meaning') showAnswer(c);
   else $('content').textContent = flipped ? c.answer : c.question;
-  $('content').className = flipped ? (c.type === 'movements' ? 'answer count' : 'answer') : 'question';
-  $('hint').textContent = flipped ? 'Tap to see question again' : 'Tap to reveal · Space on keyboard';
+  $('content').className = flipped ? (c.type === 'movements' ? 'answer count' : 'answer' + (c.answer.length > LONG_ANSWER ? ' long' : '')) : 'question';
+  $('hint').textContent = flipped ? HINT_BACK : HINT_FRONT;
+  // Screen readers don't reliably read a changed button label, so announce the flip.
+  $('announce').textContent = flipped ? 'Answer: ' + c.answer : c.question;
   $('card').setAttribute('aria-label', flipped ? c.answer + ' Show question' : c.question + ' Reveal answer');
   if (flipped) $('again').disabled = $('known').disabled = false;
 }
