@@ -18,6 +18,8 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - name: Check card data and site files
+        run: node tests/validate.js
       - name: Stamp cache version
         run: sed -i "s/__BUILD__/${GITHUB_SHA::7}/" sw.js
       - uses: actions/configure-pages@v5

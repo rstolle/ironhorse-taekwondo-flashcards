@@ -27,17 +27,28 @@ $('category').innerHTML = Object.entries(CATEGORIES).map(([value, label]) => {
   return '<option value="' + value + '">' + label + ' · ' + count + '</option>';
 }).join('');
 
-let deck = [], index = 0, flipped = false, known = 0, missed = [], review = false;
+// revealed: the answer of the current card has been shown at least once, so it can be rated.
+let deck = [], index = 0, flipped = false, revealed = false, known = 0, missed = [], review = false;
 
 const storageKey = 'ironhorse-flashcards-v2';
+let storageOk = true;
+try { localStorage.removeItem('ironhorse-flashcards-v1'); } catch (e) {} // retired save format
+
 function save() {
   try {
     localStorage.setItem(storageKey, JSON.stringify({
       category: $('category').value, review, deck: deck.map(c => c.id), index, known, missed: missed.map(c => c.id)
     }));
   } catch (e) {
-    $('remaining').textContent = 'Browser storage unavailable; progress lasts for this visit.';
+    storageOk = false;
+    showRemaining();
   }
+}
+
+function showRemaining() {
+  if (index >= deck.length) return;
+  $('remaining').textContent = (deck.length - index) + ' cards remaining' +
+    (storageOk ? '' : ' · progress can\u2019t be saved in this browser');
 }
 
 function selected() {
@@ -54,6 +65,7 @@ function start(items, isReview = false) {
 
 function render() {
   flipped = false;
+  revealed = false;
   const c = deck[index];
   $('position').textContent = (review ? 'Missed-card review · ' : '') + 'Card ' + (index + 1) + ' of ' + deck.length;
   $('score').textContent = known + ' got it · ' + missed.length + ' to revisit';
@@ -65,7 +77,7 @@ function render() {
   $('announce').textContent = '';
   $('card').setAttribute('aria-label', c.question + ' Reveal answer');
   $('again').disabled = $('known').disabled = true;
-  $('remaining').textContent = (deck.length - index) + ' cards remaining';
+  showRemaining();
 }
 
 function showAnswer(c) {
@@ -95,7 +107,9 @@ function flip() {
   // Screen readers don't reliably read a changed button label, so announce the flip.
   $('announce').textContent = flipped ? 'Answer: ' + c.answer : c.question;
   $('card').setAttribute('aria-label', flipped ? c.answer + ' Show question' : c.question + ' Reveal answer');
-  if (flipped) $('again').disabled = $('known').disabled = false;
+  // Rating unlocks once the answer has been seen, and stays unlocked if the card is turned back.
+  if (flipped) revealed = true;
+  $('again').disabled = $('known').disabled = !revealed;
 }
 
 function showDone() {
@@ -107,7 +121,7 @@ function showDone() {
 }
 
 function rate(got) {
-  if (index >= deck.length || $('known').disabled) return;
+  if (index >= deck.length || !revealed) return;
   if (got) known++; else missed.push(deck[index]);
   index++;
   save();
@@ -133,11 +147,21 @@ $('newsession').onclick = () => start(selected());
 $('review').onclick = () => start(missed, true);
 $('shuffle').onclick = () => start(shuffled(review ? deck : selected()), review);
 
-// Shortcuts work even after clicking a button; only form fields keep their own keys.
+// Shortcuts: 1 and 2 work anywhere except form fields. Space flips the card, unless Tab moved
+// focus to another button; then Space presses that button as usual. A button focused by a mouse
+// click or tap doesn't count, so Space keeps flipping cards after you click Shuffle.
+let tabbing = false, tabbedTo = null;
+document.addEventListener('keydown', e => { if (e.key === 'Tab') tabbing = true; }, true);
+document.addEventListener('pointerdown', () => { tabbing = false; tabbedTo = null; }, true);
+document.addEventListener('focusin', e => { tabbedTo = tabbing ? e.target : null; tabbing = false; });
 document.addEventListener('keydown', e => {
   if (e.ctrlKey || e.metaKey || e.altKey) return;
-  if (['SELECT', 'INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
-  if (e.code === 'Space') { e.preventDefault(); flip(); }
+  const el = document.activeElement;
+  if (['SELECT', 'INPUT', 'TEXTAREA'].includes(el.tagName)) return;
+  if (e.code === 'Space') {
+    if (el.tagName === 'BUTTON' && el.id !== 'card' && el === tabbedTo) return;
+    e.preventDefault(); flip();
+  }
   else if (e.key === '1') rate(false);
   else if (e.key === '2') rate(true);
 });

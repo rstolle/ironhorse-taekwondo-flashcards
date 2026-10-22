@@ -1,6 +1,7 @@
 {
   "name": "Ironhorse Form Practice",
   "short_name": "Ironhorse",
+  "id": "./",
   "description": "Taekwondo form, movement, and belt flashcards.",
   "start_url": "./",
   "scope": "./",

@@ -28,6 +28,11 @@ The deploy stamps a fresh cache version automatically, so installed copies refre
 Card IDs come from names, so adding or reordering forms keeps everyone's saved progress intact
 (renaming a form resets progress for that card only if it was mid-session).
 
+Before you push, you can check your edits with `node tests/validate.js`. It confirms every form has a
+whole-number movement count and a meaning, every bold phrase in `emphasis` appears in its form's meaning
+(same spelling, quotes, and order), there are no duplicate forms or belts, and every file the app needs exists.
+The deploy runs the same check first, so a mistake stops the deploy and the live site stays as it was.
+
 ## Files
 
 - `index.html`: page markup
@@ -35,5 +40,7 @@ Card IDs come from names, so adding or reordering forms keeps everyone's saved p
 - `data.js`: card content
 - `app.js`: app logic
 - `sw.js`: offline cache
+- `fonts/`: Inter font, bundled for offline use (SIL Open Font License, see `fonts/Inter-LICENSE.txt`)
+- `tests/validate.js`: data and file checks, run before every deploy
 - `manifest.webmanifest`: install metadata and icons
 - `.nojekyll`: tells GitHub Pages to serve files as-is
