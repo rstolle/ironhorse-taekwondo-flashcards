@@ -123,9 +123,9 @@ footer { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 20px;
 /* Hover styles only apply to real pointers, so they don't stick after a tap. */
 @media (hover: hover) {
   .identity:hover .brand, .site-link:hover { text-decoration: underline; text-underline-offset: 4px; }
-  button:not(:disabled):hover { background: var(--surface-hover); }
+  button:not(:disabled):not(.card):not(.primary):not(.install):hover { background: var(--surface-hover); }
   .card:hover { background: var(--card-hover); }
-  .primary:not(:disabled):hover { background: var(--red-hover); }
+  .primary:not(:disabled):hover, .install:hover { background: var(--red-hover); border-color: var(--red-hover); }
 }
 button:not(:disabled):active { transform: scale(.98); }
 .card:active { background: var(--card-hover); }
