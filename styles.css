@@ -7,7 +7,24 @@
    ========================================================================== */
 
 /* ---------- 1. Base and desktop layout ---------- */
-/* Inter, bundled locally (fonts/, SIL Open Font License) so it also works offline. */
+/* Fonts are bundled locally (fonts/, SIL Open Font License) so they also work offline.
+   Anton and Poppins match the Ironhorse Martial Arts website; Inter is the body font. */
+@font-face {
+  font-family: Anton;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/anton-latin-400.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("fonts/poppins-latin-500.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
 @font-face {
   font-family: Inter;
   font-style: normal;
@@ -17,13 +34,25 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 :root {
-  --bg: #101918;
-  --ink: #ecece7;
-  --line: #35423e;
-  --accent: #c5e6a3;
-  --card: #e6e8db;
-  --card-ink: #1c2b24;
-  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* Ironhorse Martial Arts theme: black, white and the school's red (#D41F1F) */
+  --bg: #000;
+  --surface: #161616;
+  --surface-hover: #222;
+  --ink: #fff;
+  --muted: #bdbdbd;
+  --faint: #9e9e9e;
+  --line: #2b2b2b;
+  --control: #4a4a4a;
+  --red: #d41f1f;          /* buttons, progress, card label (white text on it: 5.2:1) */
+  --red-hover: #b3191a;
+  --red-text: #ff5249;     /* red text on black (6:1); plain --red is too dark for small text there */
+  --card: #fff;
+  --card-hover: #f2f2f2;
+  --card-ink: #111;
+  --body: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --display: Anton, Impact, "Arial Narrow", sans-serif;
+  --button-font: Poppins, Inter, system-ui, sans-serif;
+  font-family: var(--body);
   color: var(--ink);
   background: var(--bg);
   color-scheme: dark;
@@ -41,51 +70,51 @@ main {
 
 header { display: flex; justify-content: space-between; align-items: center; gap: 12px; border-bottom: 1px solid var(--line); padding-bottom: 24px; }
 .identity { display: flex; align-items: center; gap: 18px; min-width: 0; }
-.logo { width: 96px; height: 96px; object-fit: contain; border-radius: 12px; background: #000; flex-shrink: 0; }
+.logo { width: 96px; height: 96px; object-fit: contain; border-radius: 50%; background: #000; flex-shrink: 0; }
 .identity { color: inherit; text-decoration: none; border-radius: 12px; }
-.identity:focus-visible, .site-link:focus-visible { outline: 3px solid #c7e5a6; outline-offset: 4px; }
-.brand { display: block; letter-spacing: 3px; font-size: 12px; color: #c4d5bc; }
-.brand span { display: inline-block; margin-top: 8px; font-size: 10px; letter-spacing: 2px; }
-.badge { border: 1px solid #62775b; padding: 8px 12px; border-radius: 30px; color: #c2d6b4; font-size: 12px; }
-.install { border-color: var(--accent); color: var(--accent); padding: 8px 14px; font-size: 12px; border-radius: 30px; }
+.identity:focus-visible, .site-link:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
+.brand { display: block; font-family: var(--display); font-size: 26px; letter-spacing: .5px; line-height: 1.05; text-transform: uppercase; color: var(--ink); }
+.brand span { display: inline-block; margin-top: 2px; font-size: 16px; letter-spacing: 1.5px; color: var(--red-text); }
+.badge { border: 1px solid var(--control); padding: 8px 12px; border-radius: 30px; color: #d9d9d9; font-size: 12px; }
+.install { background: var(--red); border-color: var(--red); color: #fff; padding: 8px 16px; font-size: 13px; border-radius: 999px; }
 
-.ios-hint { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 16px; padding: 10px 6px 10px 14px; border: 1px solid #62775b; border-radius: 12px; color: #c2d6b4; font-size: 14px; line-height: 1.5; }
+.ios-hint { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 16px; padding: 10px 6px 10px 14px; border: 1px solid var(--control); border-radius: 12px; color: #d9d9d9; font-size: 14px; line-height: 1.5; }
 .ios-hint button { min-width: 44px; min-height: 44px; padding: 0; border-color: transparent; border-radius: 10px; flex-shrink: 0; }
 
-h1 { font-size: clamp(30px, 6vw, 48px); margin: 32px 0 8px; font-weight: 550; letter-spacing: -2px; }
-.intro { color: #a4b3ad; margin: 0 0 28px; line-height: 1.6; }
+h1 { font-family: var(--display); font-size: clamp(38px, 7vw, 64px); font-weight: 400; letter-spacing: .5px; line-height: 1.05; text-transform: uppercase; margin: 32px 0 12px; }
+.intro { color: var(--muted); margin: 0 0 28px; line-height: 1.6; }
 
 button, select { font: inherit; touch-action: manipulation; }
-button { cursor: pointer; border: 1px solid #4e6258; background: transparent; color: inherit; border-radius: 12px; padding: 12px 18px; }
-button:focus-visible, select:focus-visible { outline: 3px solid #c7e5a6; outline-offset: 4px; }
+button { cursor: pointer; border: 1px solid var(--control); background: transparent; color: inherit; border-radius: 999px; padding: 12px 20px; font-family: var(--button-font); font-weight: 500; }
+button:focus-visible, select:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
 button:disabled { opacity: .4; cursor: default; }
 
 .toolbar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
-select { background: #1b2924; color: #eee; border: 1px solid #4e6258; border-radius: 12px; padding: 12px; flex: 1; min-width: 175px; }
+select { background: var(--surface); color: #fff; border: 1px solid var(--control); border-radius: 999px; padding: 12px 18px; font-family: var(--button-font); font-weight: 500; flex: 1; min-width: 175px; }
 .tool { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
 .tool svg { width: 18px; height: 18px; flex-shrink: 0; }
 
-.meta { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; color: #adbbb3; margin: 16px 0; }
-.track { height: 4px; background: #2d3c34; border-radius: 4px; overflow: hidden; }
-.fill { background: var(--accent); height: 100%; transition: width .3s; }
+.meta { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; color: var(--muted); margin: 16px 0; }
+.track { height: 5px; background: var(--line); border-radius: 4px; overflow: hidden; }
+.fill { background: var(--red); height: 100%; transition: width .3s; }
 
-.card { display: flex; width: 100%; min-height: 330px; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 36px 28px; margin: 20px 0 18px; background: var(--card); color: var(--card-ink); border: 0; border-radius: 22px; box-shadow: 0 18px 60px #0003; -webkit-tap-highlight-color: transparent; }
-.eyebrow { text-transform: uppercase; font-size: 11px; letter-spacing: 2px; color: #4f6152; }
-.question { font-size: clamp(25px, 4vw, 36px); font-weight: 550; line-height: 1.35; margin: 24px 0; }
+.card { display: flex; width: 100%; min-height: 330px; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 36px 28px; margin: 20px 0 18px; background: var(--card); color: var(--card-ink); border: 0; border-radius: 22px; box-shadow: 0 18px 60px #0003; -webkit-tap-highlight-color: transparent; font-family: var(--body); font-weight: 400; }
+.eyebrow { text-transform: uppercase; font-family: var(--button-font); font-weight: 500; font-size: 12px; letter-spacing: 2px; color: var(--red); }
+.question { font-family: var(--display); font-size: clamp(30px, 4.6vw, 46px); font-weight: 400; letter-spacing: .5px; line-height: 1.15; text-transform: uppercase; margin: 22px 0; }
 .answer { font-size: clamp(20px, 3vw, 26px); line-height: 1.6; margin: 20px 0; text-wrap: pretty; }
 .answer strong { font-weight: 800; }
-.count { font-size: 76px; line-height: 1.2; }
-.hint { font-size: 12px; color: #55675a; margin-top: 12px; }
+.count { font-family: var(--display); font-size: 112px; line-height: 1.05; color: var(--red); }
+.hint { font-size: 12px; color: #5c5c5c; margin-top: 12px; }
 
 .actions { display: flex; gap: 12px; }
 .actions button { flex: 1; }
-.primary { background: var(--accent); color: #1b2c22; border-color: var(--accent); }
+.primary { background: var(--red); color: #fff; border-color: var(--red); }
 
-.footer { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 24px; color: #96a89d; font-size: 12px; line-height: 1.7; }
+.footer { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 24px; color: var(--faint); font-size: 12px; line-height: 1.7; }
 .done { text-align: center; padding: 35px 10px; }
-.done h2 { font-size: 36px; }
-.site-link { display: inline-block; margin-bottom: 10px; padding: 10px 0; color: var(--accent); font-size: 15px; font-weight: 550; text-decoration: none; }
-footer { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 20px; color: #8da095; font-size: 12px; line-height: 1.7; }
+.done h2 { font-family: var(--display); font-size: 48px; font-weight: 400; letter-spacing: .5px; text-transform: uppercase; }
+.site-link { display: inline-block; margin-bottom: 10px; padding: 10px 0; color: var(--red-text); font-family: var(--button-font); font-size: 15px; font-weight: 500; text-decoration: none; }
+footer { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 20px; color: var(--faint); font-size: 12px; line-height: 1.7; }
 
 .hidden, .install.hidden, .ios-hint.hidden { display: none; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
@@ -94,12 +123,12 @@ footer { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 20px;
 /* Hover styles only apply to real pointers, so they don't stick after a tap. */
 @media (hover: hover) {
   .identity:hover .brand, .site-link:hover { text-decoration: underline; text-underline-offset: 4px; }
-  button:not(:disabled):hover { background: #2c3b34; }
-  .card:hover { background: #f0f1e8; }
-  .primary:not(:disabled):hover { background: #d6f1bd; }
+  button:not(:disabled):hover { background: var(--surface-hover); }
+  .card:hover { background: var(--card-hover); }
+  .primary:not(:disabled):hover { background: var(--red-hover); }
 }
 button:not(:disabled):active { transform: scale(.98); }
-.card:active { background: #f0f1e8; }
+.card:active { background: var(--card-hover); }
 
 /* ---------- 3. Tablets and other touch screens ---------- */
 @media (hover: none), (pointer: coarse) {
@@ -121,15 +150,15 @@ button:not(:disabled):active { transform: scale(.98); }
   /* Compact header */
   header { padding-bottom: 12px; }
   .identity { gap: 12px; }
-  .logo { width: 44px; height: 44px; border-radius: 9px; }
-  .brand { font-size: 13px; letter-spacing: 2px; line-height: 1.35; }
+  .logo { width: 48px; height: 48px; }
+  .brand { font-size: 20px; letter-spacing: .5px; line-height: 1.1; }
   .brand br { display: none; }
-  .brand span { margin: 0 0 0 6px; font-size: 13px; letter-spacing: 2px; color: #96a89d; }
+  .brand span { margin: 0 0 0 6px; font-size: 20px; letter-spacing: .5px; }
   .badge { display: none; }
   .install { min-height: 40px; padding: 8px 14px; }
   .ios-hint { margin-top: 12px; font-size: 15px; }
 
-  h1 { font-size: 28px; letter-spacing: -.5px; margin: 16px 0 4px; }
+  h1 { font-size: 34px; letter-spacing: .5px; margin: 16px 0 6px; }
   .intro { font-size: 16px; line-height: 1.5; margin-bottom: 14px; }
 
   /* One-row toolbar: category menu plus icon buttons */
@@ -142,10 +171,10 @@ button:not(:disabled):active { transform: scale(.98); }
 
   .card { min-height: clamp(220px, 40svh, 360px); padding: 22px 20px; margin: 12px 0 0; border-radius: 18px; }
   .eyebrow { font-size: 13px; letter-spacing: 1.5px; }
-  .question { font-size: 27px; line-height: 1.3; margin: 16px 0; }
+  .question { font-size: 30px; line-height: 1.15; margin: 14px 0; }
   .answer { font-size: 20px; line-height: 1.5; margin: 14px 0; }
   .answer.long { font-size: 17.5px; line-height: 1.5; }
-  .count { font-size: 76px; line-height: 1.1; }
+  .count { font-size: 96px; line-height: 1; }
   .hint { font-size: 14px; margin-top: 6px; }
 
   /* Rating buttons stay pinned at the bottom of the screen while practicing */
@@ -154,7 +183,7 @@ button:not(:disabled):active { transform: scale(.98); }
 
   .footer { font-size: 15px; margin-top: 4px; }
   .done { padding: 28px 0 8px; font-size: 18px; line-height: 1.6; }
-  .done h2 { font-size: 30px; margin: 8px 0; }
+  .done h2 { font-size: 40px; margin: 8px 0; }
   .done button { width: 100%; min-height: 54px; margin: 5px 0; font-size: 18px; }
   footer { font-size: 14px; line-height: 1.6; margin-top: 24px; padding-bottom: max(24px, env(safe-area-inset-bottom)); }
 }
@@ -173,8 +202,8 @@ button:not(:disabled):active { transform: scale(.98); }
 @media (max-height: 540px) {
   .intro { display: none; }
   .card { min-height: 180px; padding: 16px 20px; }
-  .question { font-size: 24px; margin: 8px 0; }
-  .count { font-size: 56px; }
+  .question { font-size: 26px; margin: 8px 0; }
+  .count { font-size: 72px; }
 }
 
 /* Very narrow phones (320px): keep "Practice again" on one line */

@@ -3,7 +3,7 @@
 const VERSION = 'ironhorse-__BUILD__';
 const ASSETS = [
   './', 'index.html', 'styles.css', 'data.js', 'app.js', 'manifest.webmanifest',
-  'fonts/inter-latin-var.woff2',
+  'fonts/inter-latin-var.woff2', 'fonts/anton-latin-400.woff2', 'fonts/poppins-latin-500.woff2',
   'icons/logo.jpg', 'icons/favicon-32.png', 'icons/apple-touch-icon.png',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png'
 ];

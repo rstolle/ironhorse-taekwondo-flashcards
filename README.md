@@ -40,7 +40,7 @@ The deploy runs the same check first, so a mistake stops the deploy and the live
 - `data.js`: card content
 - `app.js`: app logic
 - `sw.js`: offline cache
-- `fonts/`: Inter font, bundled for offline use (SIL Open Font License, see `fonts/Inter-LICENSE.txt`)
+- `fonts/`: Anton and Poppins (matching the Ironhorse website) and Inter, bundled for offline use (SIL Open Font License; see the license files there)
 - `tests/validate.js`: data and file checks, run before every deploy
 - `manifest.webmanifest`: install metadata and icons
 - `.nojekyll`: tells GitHub Pages to serve files as-is
