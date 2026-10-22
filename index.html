@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ironhorse · Form Practice</title>
+<meta name="description" content="Taekwondo form, movement, and belt flashcards for Ironhorse Martial Arts students.">
+<meta name="theme-color" content="#101918">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Ironhorse">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main><header><div class="identity"><img class="logo" src="icons/logo.jpg" alt="Iron Horse Martial Arts logo" width="96" height="96"><div class="brand">IRONHORSE<br><span>MARTIAL ARTS</span></div></div><span class="badge">A LITTLE PRACTICE, EVERY DAY</span><button id="install" class="install hidden" type="button">Install app</button></header><h1>Know your forms.</h1><p class="intro">Names, meanings, and movements. Take your time, recall the answer, then turn the card.</p><div class="toolbar"><select id="category" aria-label="Card category"><option value="all">All cards · 26</option><option value="meaning">Form meanings · 10</option><option value="movements">Movement counts · 10</option><option value="belts">Belt meanings · 6</option></select><button id="shuffle">↝ Shuffle</button><button id="restart">Restart</button></div><section id="practice"><div class="meta"><span id="position"></span><span id="score"></span></div><div class="track"><div class="fill" id="progress"></div></div><button class="card" id="card" aria-label="Reveal answer"><span class="eyebrow" id="label"></span><span id="content"></span><span class="hint" id="hint">Tap to reveal · Space on keyboard</span></button><div class="actions"><button id="again" disabled>↺ Practice again</button><button class="primary" id="known" disabled>✓ Got it</button></div><div class="footer"><span id="remaining"></span><span>Space: flip &nbsp; · &nbsp; 1: practice again &nbsp; · &nbsp; 2: got it</span></div></section><section class="done hidden" id="done" aria-live="polite"><span class="eyebrow">SESSION COMPLETE</span><h2>Good work.</h2><p id="summary"></p><button id="review">Practice missed cards</button> <button class="primary" id="newsession">Start a new session</button></section><footer>Study content follows your Ironhorse handouts. Bold text follows the emphasis in your original form descriptions; historical statements and name spellings follow the supplied material. Progress is saved in this browser. Install it to your home screen and it works offline — no account needed.</footer></main>
+<script src="app.js"></script>
+</body>
+</html>
