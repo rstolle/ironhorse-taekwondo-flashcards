@@ -1,32 +1,187 @@
-const forms=[
-['Chon-Ji',19,'Literally Heaven & Earth, or Beginning & End. Represents the creation of the world or the beginning of human history. Its two similar parts represent heaven and earth.'],
-["Dan-Gun",21,"Named after the Holy Dan-Gun, the legendary Founder of Korea. Korea was founded in 2333 BC."],
-['Do-San',24,'The pseudonym of patriot Chang Ho Ahn (1878–1938), who devoted his life to furthering Korean education and was an outstanding member of the Korean Independence Movement.'],
-["Won-Hyo",28,"Noted Monk who introduced Buddhism to the Silla Dynasty in the year 686 AD."],
-["Yul-Gok",38,"It is the pseudonym of Master Yi (1536–1584), a great scholar and philosopher nicknamed the “Confucius of Korea.” The 38 movements of this pattern refer to his birthplace on the 38th latitude and the design represents “scholar.”"],
-["Joong-Gun",32,"He was the patriot Joong Gun Ahn, who assassinated Hirobumi Ito, the first Japanese Governor-General of Korea. Hirobumi Ito was the man who played the lead part of the Korea/Japan merger. The 32 movements in this pattern represent Mr. Ahn’s age when he was executed at the Lui-Shung prison in 1910."],
-["Toi-Gye",37,"It is the pseudonym of the noted scholar Hwan Lee (1501–1570), an authority of Confucianism. The 37 movements of this pattern refer to his birthplace on the 37th latitude. The diagram represents “scholar.”"],
-["Hwa-Rang",29,"It is named after the Hwa-Rang youth group, which originated in the Silla Dynasty about 1350 years ago. This group eventually became the driving force for the unification of the three kingdoms of Korea. The 29 movements refer to the 29th Infantry Division where Taekwondo developed into maturity."],
-['Tidi-Hil-Il-Cho',27,'It means unity of everything or unity of all. Dedicated to Myong Kil Kim, the driving spirit behind the House of Kim.'],
-["Choong-Mu",30,"It is named after Admiral Yi Sun Sin of the Yi Dynasty. He invented the first armored battleship, which was the precursor of the submarine in 1592 AD. Their boats were also known as Turtle Boats. The left hand attack at the end of the pattern symbolizes his regrettable death."]];
-const emphasis={"Chon-Ji": ["Heaven & Earth", "Beginning & End"], "Dan-Gun": ["Founder of Korea. Korea was founded in 2333 BC."], "Do-San": ["Chang Ho Ahn", "outstanding member of the Korean Independence Movement."], "Won-Hyo": ["Noted Monk who introduced Buddhism to the Silla Dynasty in the year 686 AD."], "Yul-Gok": ["It is the pseudonym of Master Yi (1536–1584), a great scholar and philosopher nicknamed the “Confucius of Korea.”"], "Joong-Gun": ["The 32 movements in this pattern represent Mr. Ahn’s age when he was executed at the Lui-Shung prison in 1910."], "Toi-Gye": ["The 37 movements of this pattern refer to his birthplace on the 37th latitude. The diagram represents “scholar.”"], "Hwa-Rang": ["It is named after the Hwa-Rang youth group,", "The 29 movements refer to the 29th Infantry Division where Taekwondo developed into maturity."], "Tidi-Hil-Il-Cho": ["It means unity of everything or unity of all."], "Choong-Mu": ["Their boats were also known as Turtle Boats. The left hand attack at the end of the pattern symbolizes his regrettable death."]};
-const belts=[['White','Beginning'],['Yellow','Sun'],['Green','Earth'],['Blue','Sky'],['Red','Fire'],['Black','New Beginning']];
-const cards=[...forms.flatMap(([name,n,meaning],i)=>[{id:'f'+i,type:'meaning',name,question:'What is the meaning of '+name+'?',answer:meaning},{id:'m'+i,type:'movements',name,question:'How many movements are in '+name+'?',answer:String(n)}]),...belts.map(([name,answer],i)=>({id:'b'+i,type:'belts',name:name+' Belt',question:'What does the '+name+' Belt mean?',answer}))];
-const $=id=>document.getElementById(id);let deck=[],index=0,flipped=false,known=0,missed=[];
-const storageKey='ironhorse-flashcards-v1';function save(){try{localStorage.setItem(storageKey,JSON.stringify({category:$('category').value,deck:deck.map(c=>c.id),index,known,missed:missed.map(c=>c.id)}))}catch(e){$('remaining').textContent='Browser storage unavailable; progress lasts for this visit.'}}
-function start(items){deck=[...items];index=0;known=0;missed=[];$('practice').classList.remove('hidden');$('done').classList.add('hidden');render();save()}
-function selected(){return cards.filter(c=>$('category').value==='all'||c.type===$('category').value)}
-function render(){flipped=false;const c=deck[index];$('position').textContent='Card '+(index+1)+' of '+deck.length;$('score').textContent=known+' got it · '+missed.length+' to revisit';$('progress').style.width=(index/deck.length*100)+'%';$('label').textContent={meaning:'Form meaning',movements:'Movement count',belts:'Belt meaning'}[c.type];$('content').className='question';$('content').textContent=c.question;$('hint').textContent='Tap to reveal · Space on keyboard';$('card').setAttribute('aria-label',c.question+' Reveal answer');$('again').disabled=$('known').disabled=true;$('remaining').textContent=(deck.length-index)+' cards remaining'}
-function showAnswer(c){const node=$('content');node.textContent='';let rest=c.answer;for(const phrase of (emphasis[c.name]||[])){const at=rest.indexOf(phrase);if(at<0)continue;node.appendChild(document.createTextNode(rest.slice(0,at)));const strong=document.createElement('strong');strong.textContent=phrase;node.appendChild(strong);rest=rest.slice(at+phrase.length)}node.appendChild(document.createTextNode(rest))}
-function flip(){if(index>=deck.length)return;flipped=!flipped;const c=deck[index];if(flipped&&c.type==='meaning')showAnswer(c);else $('content').textContent=flipped?c.answer:c.question;$('content').className=flipped?(c.type==='movements'?'answer count':'answer'):'question';$('hint').textContent=flipped?'Tap to see question again':'Tap to reveal · Space on keyboard';$('card').setAttribute('aria-label',flipped?c.answer+' Show question':c.question+' Reveal answer');if(flipped)$('again').disabled=$('known').disabled=false}
-function rate(got){if(index>=deck.length||$('known').disabled)return;if(got)known++;else missed.push(deck[index]);index++;save();if(index<deck.length)render();else{$('practice').classList.add('hidden');$('done').classList.remove('hidden');$('summary').textContent=known+' of '+deck.length+' recalled. '+(missed.length?missed.length+' cards ready for another pass.':'You recalled every card in this round.');$('review').disabled=!missed.length}}
-$('card').onclick=flip;$('known').onclick=()=>rate(true);$('again').onclick=()=>rate(false);$('category').onchange=()=>start(selected());$('restart').onclick=$('newsession').onclick=()=>start(selected());$('review').onclick=()=>start(missed);$('shuffle').onclick=()=>{const a=selected();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}start(a)};
-document.addEventListener('keydown',e=>{if(['SELECT','BUTTON','INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;if(e.code==='Space'){e.preventDefault();flip()}else if(e.key==='1')rate(false);else if(e.key==='2')rate(true)});
-function restore(){try{const s=JSON.parse(localStorage.getItem(storageKey));if(!s||!['all','meaning','movements','belts'].includes(s.category)||!Array.isArray(s.deck)||!s.deck.length)return false;const find=id=>cards.find(c=>c.id===id);const restored=s.deck.map(find);if(restored.some(c=>!c)||!Number.isInteger(s.index)||s.index<0||s.index>restored.length||!Number.isInteger(s.known)||s.known<0||!Array.isArray(s.missed)||s.missed.some(id=>!find(id))||s.known+s.missed.length!==s.index)return false;$('category').value=s.category;deck=restored;index=s.index;known=s.known;missed=s.missed.map(find);if(index<deck.length)render();else{$('practice').classList.add('hidden');$('done').classList.remove('hidden');$('summary').textContent=known+' of '+deck.length+' recalled. '+missed.length+' cards to revisit.';$('review').disabled=!missed.length}return true}catch(e){return false}}if(!restore())start(cards);
+// App logic. Card content lives in data.js (forms, emphasis, belts).
 
-// Offline support and install prompt
-if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
-let installEvent=null;
-window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvent=e;$('install').classList.remove('hidden')});
-$('install').onclick=async()=>{if(!installEvent)return;installEvent.prompt();await installEvent.userChoice;installEvent=null;$('install').classList.add('hidden')};
-window.addEventListener('appinstalled',()=>$('install').classList.add('hidden'));
+const $ = id => document.getElementById(id);
+const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
+// IDs come from names, so adding or reordering cards never scrambles saved progress.
+const cards = [
+  ...forms.flatMap(([name, n, meaning]) => [
+    { id: 'meaning:' + slug(name), type: 'meaning', name, question: 'What is the meaning of ' + name + '?', answer: meaning },
+    { id: 'movements:' + slug(name), type: 'movements', name, question: 'How many movements are in ' + name + '?', answer: String(n) }
+  ]),
+  ...belts.map(([name, answer]) => ({ id: 'belt:' + slug(name), type: 'belts', name: name + ' Belt', question: 'What does the ' + name + ' Belt mean?', answer }))
+];
+const byId = new Map(cards.map(c => [c.id, c]));
+const TYPE_LABELS = { meaning: 'Form meaning', movements: 'Movement count', belts: 'Belt meaning' };
+const CATEGORIES = { all: 'All cards', meaning: 'Form meanings', movements: 'Movement counts', belts: 'Belt meanings' };
+
+// Category menu with live counts.
+$('category').innerHTML = Object.entries(CATEGORIES).map(([value, label]) => {
+  const count = value === 'all' ? cards.length : cards.filter(c => c.type === value).length;
+  return '<option value="' + value + '">' + label + ' · ' + count + '</option>';
+}).join('');
+
+let deck = [], index = 0, flipped = false, known = 0, missed = [], review = false;
+
+const storageKey = 'ironhorse-flashcards-v2';
+function save() {
+  try {
+    localStorage.setItem(storageKey, JSON.stringify({
+      category: $('category').value, review, deck: deck.map(c => c.id), index, known, missed: missed.map(c => c.id)
+    }));
+  } catch (e) {
+    $('remaining').textContent = 'Browser storage unavailable; progress lasts for this visit.';
+  }
+}
+
+function selected() {
+  const cat = $('category').value;
+  return cards.filter(c => cat === 'all' || c.type === cat);
+}
+
+function start(items, isReview = false) {
+  deck = [...items]; index = 0; known = 0; missed = []; review = isReview;
+  $('practice').classList.remove('hidden');
+  $('done').classList.add('hidden');
+  render(); save();
+}
+
+function render() {
+  flipped = false;
+  const c = deck[index];
+  $('position').textContent = (review ? 'Missed-card review · ' : '') + 'Card ' + (index + 1) + ' of ' + deck.length;
+  $('score').textContent = known + ' got it · ' + missed.length + ' to revisit';
+  $('progress').style.width = (index / deck.length * 100) + '%';
+  $('label').textContent = TYPE_LABELS[c.type];
+  $('content').className = 'question';
+  $('content').textContent = c.question;
+  $('hint').textContent = 'Tap to reveal · Space on keyboard';
+  $('card').setAttribute('aria-label', c.question + ' Reveal answer');
+  $('again').disabled = $('known').disabled = true;
+  $('remaining').textContent = (deck.length - index) + ' cards remaining';
+}
+
+function showAnswer(c) {
+  const node = $('content');
+  node.textContent = '';
+  let rest = c.answer;
+  for (const phrase of (emphasis[c.name] || [])) {
+    const at = rest.indexOf(phrase);
+    if (at < 0) continue;
+    node.appendChild(document.createTextNode(rest.slice(0, at)));
+    const strong = document.createElement('strong');
+    strong.textContent = phrase;
+    node.appendChild(strong);
+    rest = rest.slice(at + phrase.length);
+  }
+  node.appendChild(document.createTextNode(rest));
+}
+
+function flip() {
+  if (index >= deck.length) return;
+  flipped = !flipped;
+  const c = deck[index];
+  if (flipped && c.type === 'meaning') showAnswer(c);
+  else $('content').textContent = flipped ? c.answer : c.question;
+  $('content').className = flipped ? (c.type === 'movements' ? 'answer count' : 'answer') : 'question';
+  $('hint').textContent = flipped ? 'Tap to see question again' : 'Tap to reveal · Space on keyboard';
+  $('card').setAttribute('aria-label', flipped ? c.answer + ' Show question' : c.question + ' Reveal answer');
+  if (flipped) $('again').disabled = $('known').disabled = false;
+}
+
+function showDone() {
+  $('practice').classList.add('hidden');
+  $('done').classList.remove('hidden');
+  $('summary').textContent = known + ' of ' + deck.length + ' recalled. ' +
+    (missed.length ? missed.length + ' cards ready for another pass.' : 'You recalled every card in this round.');
+  $('review').disabled = !missed.length;
+}
+
+function rate(got) {
+  if (index >= deck.length || $('known').disabled) return;
+  if (got) known++; else missed.push(deck[index]);
+  index++;
+  save();
+  if (index < deck.length) render(); else showDone();
+}
+
+function shuffled(items) {
+  const a = [...items];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+$('card').onclick = flip;
+$('known').onclick = () => rate(true);
+$('again').onclick = () => rate(false);
+$('category').onchange = () => start(selected());
+// Restart keeps the current round: same order, same review mode.
+$('restart').onclick = () => start(deck, review);
+$('newsession').onclick = () => start(selected());
+$('review').onclick = () => start(missed, true);
+$('shuffle').onclick = () => start(shuffled(review ? deck : selected()), review);
+
+// Shortcuts work even after clicking a button; only form fields keep their own keys.
+document.addEventListener('keydown', e => {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (['SELECT', 'INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+  if (e.code === 'Space') { e.preventDefault(); flip(); }
+  else if (e.key === '1') rate(false);
+  else if (e.key === '2') rate(true);
+});
+
+function restore() {
+  try {
+    const s = JSON.parse(localStorage.getItem(storageKey));
+    if (!s || !(s.category in CATEGORIES) || !Array.isArray(s.deck) || !s.deck.length) return false;
+    const restored = s.deck.map(id => byId.get(id));
+    if (restored.some(c => !c) || !Number.isInteger(s.index) || s.index < 0 || s.index > restored.length ||
+        !Number.isInteger(s.known) || s.known < 0 || !Array.isArray(s.missed) || s.missed.some(id => !byId.has(id)) ||
+        s.known + s.missed.length !== s.index) return false;
+    $('category').value = s.category;
+    deck = restored; index = s.index; known = s.known; missed = s.missed.map(id => byId.get(id)); review = !!s.review;
+    if (index < deck.length) render(); else showDone();
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+if (!restore()) start(cards);
+
+// Offline support
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+}
+
+// Install prompt (Chrome, Edge, Android)
+let installEvent = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  installEvent = e;
+  $('install').classList.remove('hidden');
+});
+$('install').onclick = async () => {
+  if (!installEvent) return;
+  installEvent.prompt();
+  await installEvent.userChoice;
+  installEvent = null;
+  $('install').classList.add('hidden');
+};
+window.addEventListener('appinstalled', () => $('install').classList.add('hidden'));
+
+// iPhone/iPad have no install prompt, so show a one-time Add to Home Screen hint in Safari.
+(() => {
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const standalone = navigator.standalone || matchMedia('(display-mode: standalone)').matches;
+  let dismissed = false;
+  try { dismissed = localStorage.getItem('ironhorse-ios-hint') === 'dismissed'; } catch (e) {}
+  if (!ios || standalone || dismissed) return;
+  $('ioshint').classList.remove('hidden');
+  $('ioshint-close').onclick = () => {
+    $('ioshint').classList.add('hidden');
+    try { localStorage.setItem('ironhorse-ios-hint', 'dismissed'); } catch (e) {}
+  };
+})();

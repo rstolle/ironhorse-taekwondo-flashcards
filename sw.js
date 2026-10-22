@@ -1,7 +1,7 @@
-// Bump VERSION whenever you change any file so phones pick up the update.
-const VERSION = 'ironhorse-v1';
+// The deploy workflow replaces __BUILD__ with the commit id, so every deploy refreshes installed copies.
+const VERSION = 'ironhorse-__BUILD__';
 const ASSETS = [
-  './', 'index.html', 'styles.css', 'app.js', 'manifest.webmanifest',
+  './', 'index.html', 'styles.css', 'data.js', 'app.js', 'manifest.webmanifest',
   'icons/logo.jpg', 'icons/favicon-32.png', 'icons/apple-touch-icon.png',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png'
 ];
@@ -9,7 +9,7 @@ self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
 });
 self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== VERSION).map(k => caches.delete(k)))).then(() => self.clients.claim()));
+  e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k.startsWith('ironhorse-') && k !== VERSION).map(k => caches.delete(k)))).then(() => self.clients.claim()));
 });
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
@@ -18,5 +18,5 @@ self.addEventListener('fetch', e => {
       const copy = res.clone(); caches.open(VERSION).then(c => c.put(e.request, copy));
     }
     return res;
-  }).catch(() => caches.match('index.html'))));
+  }).catch(() => e.request.mode === 'navigate' ? caches.match('index.html') : Response.error())));
 });

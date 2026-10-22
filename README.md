@@ -21,14 +21,17 @@ A static web app with no build step. It installs to a phone's home screen and wo
 
 ## Updating the cards
 
-Card content lives at the top of `app.js` (`forms`, `emphasis`, `belts`).
-After any change, bump `VERSION` in `sw.js` (for example, `ironhorse-v2`) so installed copies refresh.
+All card content is in `data.js` (`forms`, `emphasis`, `belts`). Edit it and push to `main`.
+The deploy stamps a fresh cache version automatically, so installed copies refresh on their next launch.
+Card IDs come from names, so adding or reordering forms keeps everyone's saved progress intact
+(renaming a form resets progress for that card only if it was mid-session).
 
 ## Files
 
 - `index.html`: page markup
 - `styles.css`: styles
-- `app.js`: card data and app logic
+- `data.js`: card content
+- `app.js`: app logic
 - `sw.js`: offline cache
 - `manifest.webmanifest`: install metadata and icons
 - `.nojekyll`: tells GitHub Pages to serve files as-is

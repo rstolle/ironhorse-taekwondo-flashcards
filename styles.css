@@ -36,3 +36,6 @@ header{gap:12px}
 .install.hidden{display:none}
 @supports(padding:max(0px)){main{padding-left:max(22px,env(safe-area-inset-left));padding-right:max(22px,env(safe-area-inset-right))}}
 @media (display-mode: standalone){footer{padding-bottom:env(safe-area-inset-bottom)}}
+.ios-hint{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;padding:12px 14px;border:1px solid #62775b;border-radius:12px;color:#c2d6b4;font-size:14px;line-height:1.5}
+.ios-hint button{padding:6px 10px;border-radius:8px;flex-shrink:0}
+.ios-hint.hidden{display:none}
