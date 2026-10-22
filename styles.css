@@ -47,7 +47,7 @@
   --red-hover: #b3191a;
   --red-text: #ff5249;     /* red text on black (6:1); plain --red is too dark for small text there */
   --card: #fff;
-  --card-hover: #f2f2f2;
+  --card-hover: #fafafa;
   --card-ink: #111;
   --body: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --display: Anton, Impact, "Arial Narrow", sans-serif;
